@@ -1,0 +1,22 @@
+server:
+  port: 7001
+spring:
+  application:
+    name: mxun-chatai
+  cloud:
+    nacos:
+      discovery:
+        register-enabled: true
+        server-addr: 192.168.50.1:8848
+  config:
+    import:
+      - classpath:mongo.yml
+      - classpath:redis.yml
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+netty:
+  port: 18080
+ai:
+  api:
+    key:

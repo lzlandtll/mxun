@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    alicloud:
+      access-key:
+      secret-key:
+      sms:
+        host: https://dfsns.market.alicloudapi.com
+        path: /data/send_sms
+        appcode:
+        templateId: TPL_0000

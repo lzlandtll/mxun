@@ -1,0 +1,81 @@
+pipeline {
+    agent any
+    environment {
+        harborUser = 'admin'
+        harborPassword = 'Harbor12345'
+        harborAddress = '192.168.50.131:80'
+        harborRepo = 'repo'
+    }
+    stages {
+        stage('1.设置编译模块') {
+            steps {
+                script {
+                    // 模拟检测提交的模块
+                    def moduleList = ["mxun-auth", "mxun-chatai", "mxun-user"]
+                    def changedFiles = sh(script: "git diff --name-only HEAD~1 HEAD", returnStdout: true).trim().split("\n")
+                    echo "Changed Files: ${changedFiles}"
+
+                    def taskModules = []
+                    for (file in changedFiles) {
+                        for (module in moduleList) {
+                            if (file.contains(module) && !taskModules.contains(module)) {
+                                taskModules.add(module)
+                            }
+                        }
+                    }
+                    env.taskModules = taskModules[0]  // 使用 currentBuild 修改值
+                }
+            }
+        }
+
+        stage('2.拉取git仓库代码') {
+            steps {
+                checkout scmGit(branches: [[name: '*/dev_main']], extensions: [], userRemoteConfigs: [[url: 'http://192.168.50.130:8929/root/mxun.git']])
+                echo "拉取git仓库代码 => SUCCESS"
+            }
+        }
+
+        stage('3.maven构建代码') {
+            steps {
+                sh "/var/jenkins_home/maven/bin/mvn -f mxun-common clean install"
+                sh "/var/jenkins_home/maven/bin/mvn -f ${env.taskModules} clean package -DskipTests"
+                echo "maven构建代码 => SUCCESS"
+            }
+        }
+
+        stage('4.SonarQube代码质量检测') {
+            steps {
+                sh "/var/jenkins_home/sonar-scanner/bin/sonar-scanner -Dsonar.source=./${env.taskModules} -Dsonar.projectname=${JOB_NAME}.${env.taskModules} -Dsonar.projectKey=${JOB_NAME}.${env.taskModules} -Dsonar.java.binaries=./${env.taskModules}/target/ -Dsonar.login=sqa_ccfe830d1ee9f8534ac1164969dbe5d3472bf178"
+                echo "SonarQube代码质量检测 => SUCCESS"
+            }
+        }
+
+        stage('5.Docker制作自定义镜像') {
+            steps {
+                sh "mv ./${env.taskModules}/target/*.jar ./${env.taskModules}/docker/"
+                sh "docker build -t ${JOB_NAME}/${env.taskModules}:latest ./${env.taskModules}/docker/"
+            }
+        }
+
+        stage('6.将自定义镜像推送到Harbor') {
+            steps {
+                sh "docker login -u ${harborUser} -p ${harborPassword} ${harborAddress}"
+                sh "docker tag ${JOB_NAME}/${env.taskModules}:latest ${harborAddress}/${harborRepo}/${JOB_NAME}/${env.taskModules}:latest"
+                sh "docker push ${harborAddress}/${harborRepo}/${JOB_NAME}/${env.taskModules}:latest"
+            }
+        }
+
+        stage('7.通过SSH Server传输pipeline.yml文件') {
+            steps {
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'k8s', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: env.taskModules + '/k8s/pipeline_chatai.yml')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+            }
+        }
+
+        stage('8.通知k8smaster执行kubectl命令') {
+            steps {
+                sh "ssh root@192.168.50.132 kubectl apply -f /mydata/k8s/mxun-chatai/k8s/pipeline_chatai.yml"
+                sh "ssh root@192.168.50.132 kubectl rollout restart deployment mxun-chatai -n test-mxun"
+            }
+        }
+    }
+}

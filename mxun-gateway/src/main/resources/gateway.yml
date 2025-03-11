@@ -1,0 +1,38 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: mxun-chatai-open
+          uri: lb://mxun-chatai
+          predicates:
+            - Path=/open/chatai/**
+          filters:
+            - RewritePath=/open/chatai/(?<segment>.*),/open/$\{segment}
+
+        - id: mxun-chatai
+          uri: lb://mxun-chatai
+          predicates:
+            - Path=/api/chatai/**
+          filters:
+            - RewritePath=/api/chatai/(?<segment>.*),/$\{segment}
+
+        - id: mxun-chatai-third
+          uri: lb://mxun-chatai
+          predicates:
+            - Path=/third/chatai/**
+          filters:
+            - RewritePath=/third/chatai/(?<segment>.*),/$\{segment}
+
+        - id: mxun-auth-open
+          uri: lb://mxun-auth
+          predicates:
+            - Path=/open/auth/**
+          filters:
+            - RewritePath=/open/auth/(?<segment>.*),/open/$\{segment}
+
+        - id: mxun-sys-open
+          uri: lb://mxun-sys
+          predicates:
+            - Path=/open/sys/**
+          filters:
+            - RewritePath=/open/sys/(?<segment>.*),/open/$\{segment}

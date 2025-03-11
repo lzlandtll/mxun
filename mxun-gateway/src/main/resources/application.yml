@@ -1,0 +1,16 @@
+server:
+  port: 7000
+spring:
+  application:
+    name: mxun-gateway
+  cloud:
+    nacos:
+      discovery:
+        register-enabled: true
+        server-addr: 192.168.50.1:8848
+  config:
+    import:
+      - classpath:gateway.yml
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG

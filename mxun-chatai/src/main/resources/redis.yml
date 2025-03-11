@@ -1,0 +1,2 @@
+redisson:
+  host: redis://192.168.50.128:6379

@@ -1,0 +1,60 @@
+package com.mxun.chatai.controller;
+
+import com.mxun.chatai.entity.ChatSession;
+import com.mxun.chatai.service.ChatSessionService;
+import com.mxun.chatai.dto.ChatMessageVO;
+import com.mxun.common.annotation.Permission;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * @Description: AI会话控制器
+ * @Author: liuzhilin
+ * @Date: 2025/1/14
+ */
+@Validated
+@RestController
+@RequestMapping("/chatSession")
+public class ChatSessionController {
+
+
+    @Autowired
+    private ChatSessionService chatService;
+
+
+    /**
+     * @Description: 用户向AI发送提问消息
+     * @Author: liuzhilin
+     * @Date: 2025/3/9 16:47
+     */
+    @Permission(apiCode = "CHAT_AI.CHAT_SESSION.SEND_MESSAGE", errorCode = "03001")
+    @PostMapping("/sendMessage")
+    public ChatSession sendMessage(@Valid @RequestBody ChatMessageVO chatMessageVO) {
+        return chatService.sendMessage(chatMessageVO);
+    }
+
+    /**
+     * @Description: 获取用户会话列表
+     * @Author: liuzhilin
+     * @Date: 2025/3/9 16:48
+     */
+    @GetMapping("/getChatSessionList")
+    public List<ChatSession> getChatSessionList(){
+        List<ChatSession> chatSessionList = chatService.getChatSessionList();
+        return chatSessionList;
+    }
+
+    /**
+     * @Description: 根据会话ID获取会话消息列表
+     * @Author: liuzhilin
+     * @Date: 2025/3/9 16:49
+     */
+    @GetMapping("/getMessageList/{sessionId}")
+    public List<ChatSession.ChatMessage> getMessageList(@PathVariable String sessionId){
+        return chatService.getMessageList(sessionId);
+    }
+}

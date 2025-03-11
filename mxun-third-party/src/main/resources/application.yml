@@ -1,0 +1,13 @@
+server:
+  port: 7004
+spring:
+  application:
+    name: mxun-third-party
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  config:
+    import:
+      - classpath:sms.yml
+      - classpath:redis.yml
