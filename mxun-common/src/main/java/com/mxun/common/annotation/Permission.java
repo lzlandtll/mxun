@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * @Date: 2025/3/8
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Permission {
     // 接口编码: ${模块名}.${接口层}.${方法名}
     String apiCode();
