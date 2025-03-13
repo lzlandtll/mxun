@@ -2,16 +2,15 @@ package com.mxun.sys.service.impl;
 
 
 import com.alibaba.cloud.commons.lang.StringUtils;
+import com.mxun.common.enums.*;
+import com.mxun.common.utils.UserUtil;
 import com.mxun.sys.dto.UserDTO;
 import com.mxun.sys.entity.User;
 import com.mxun.sys.feign.ThirdPartyFeignService;
 import com.mxun.sys.mapper.UserMapper;
+import com.mxun.sys.service.RoleUserService;
 import com.mxun.sys.service.UserService;
 import com.mxun.common.dto.SmsCodeDTO;
-import com.mxun.common.enums.ErrorEnum;
-import com.mxun.common.enums.SmsTemplateEnum;
-import com.mxun.common.enums.SmsTypeEnum;
-import com.mxun.common.enums.UserTypeEnum;
 import com.mxun.common.resultView.BusinessException;
 import com.mxun.common.resultView.ResultView;
 import com.mxun.common.utils.RSADecoder;
@@ -20,6 +19,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -33,6 +33,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private ThirdPartyFeignService thirdPartyFeignService;
+
+    @Autowired
+    private RoleUserService roleUserService;
 
     @Override
     public void getRegisterSmsCode(String tel) {
@@ -99,5 +102,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .userType(UserTypeEnum.COMMON_USER.getUserType())
                 .build();
         super.save(build);
+    }
+
+    @Transactional
+    @Override
+    public Long addAiKey(String aiKey) {
+        roleUserService.addRoleUser(UserUtil.getUserId(), RoleEnum.CHAT_AI.getRoleId());
+
+        User user = new User();
+        user.setId(UserUtil.getUserId());
+        user.setAiKey(aiKey);
+        this.updateById(user);
+        UserUtil.setAiKey(aiKey);
+        return RoleEnum.CHAT_AI.getRoleId();
+    }
+
+    @Transactional
+    @Override
+    public Long removeAiKey() {
+        roleUserService.removeRoleUser(UserUtil.getUserId(), RoleEnum.CHAT_AI.getRoleId());
+        User user = new User();
+        user.setId(UserUtil.getUserId());
+        user.setAiKey("");
+        this.updateById(user);
+        return RoleEnum.CHAT_AI.getRoleId();
     }
 }

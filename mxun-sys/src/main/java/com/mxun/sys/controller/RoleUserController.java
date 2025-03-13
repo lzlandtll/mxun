@@ -6,6 +6,7 @@ import com.mxun.sys.entity.RoleUser;
 import com.mxun.sys.service.RoleUserService;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Description: 角色用户控制层
@@ -26,7 +27,7 @@ public class RoleUserController {
      * @Date: 2025/3/9 18:02
      */
     @GetMapping("getRolesByUserId")
-    public List<Long> getRolesByUserId(@RequestParam("userId") Long userId) {
+    public Set<Long> getRolesByUserId(@RequestParam("userId") Long userId) {
         return roleUserService.getRolesByUserId(userId);
     }
 

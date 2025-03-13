@@ -6,8 +6,10 @@ import java.io.Serializable;
 
 import java.io.Serial;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -16,6 +18,8 @@ import lombok.experimental.Accessors;
  * @author moxuan
  * @since 2025-03-08
  */
+@NoArgsConstructor
+@AllArgsConstructor
 @Accessors(chain = true)
 @Data(staticConstructor = "create")
 @EqualsAndHashCode(callSuper = true)

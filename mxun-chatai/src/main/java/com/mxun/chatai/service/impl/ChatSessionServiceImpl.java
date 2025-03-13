@@ -66,6 +66,11 @@ public class ChatSessionServiceImpl implements ChatSessionService {
         pushMessage(chatMessage);
     }
 
+    @Override
+    public void removeChatSession(String sessionId) {
+        mongoTemplate.remove(new Query(Criteria.where(ChatConstant.SESSION_ID).is(sessionId)), ChatSession.class);
+    }
+
     /**
      * @Description: 保存信息
      * @Author: liuzhilin
@@ -107,7 +112,7 @@ public class ChatSessionServiceImpl implements ChatSessionService {
         ChatSession chatSession = mongoTemplate.findOne(query, ChatSession.class);
 
         // 异步调用通义千问
-        chatGPTService.streamChat(messageVO.getSessionId(), UserUtil.getUserId(), chatSession.getMessages());
+        chatGPTService.streamChat(messageVO.getSessionId(), chatSession.getMessages());
 
         return chatSession;
     }

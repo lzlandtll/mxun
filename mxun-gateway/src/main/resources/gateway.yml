@@ -36,3 +36,10 @@ spring:
             - Path=/open/sys/**
           filters:
             - RewritePath=/open/sys/(?<segment>.*),/open/$\{segment}
+
+        - id: mxun-sys
+          uri: lb://mxun-sys
+          predicates:
+            - Path=/api/sys/**
+          filters:
+            - RewritePath=/api/sys/(?<segment>.*),/$\{segment}

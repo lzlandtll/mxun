@@ -31,8 +31,8 @@ public class ChatSessionController {
      * @Author: liuzhilin
      * @Date: 2025/3/9 16:47
      */
-    @Permission(apiCode = "CHAT_AI.CHAT_SESSION.SEND_MESSAGE", errorCode = "03001")
     @PostMapping("/sendMessage")
+    @Permission(apiCode = "CHAT_AI.CHAT_SESSION.SEND_MESSAGE", errorCode = "03001")
     public ChatSession sendMessage(@Valid @RequestBody ChatMessageVO chatMessageVO) {
         return chatService.sendMessage(chatMessageVO);
     }
@@ -46,6 +46,17 @@ public class ChatSessionController {
     public List<ChatSession> getChatSessionList(){
         List<ChatSession> chatSessionList = chatService.getChatSessionList();
         return chatSessionList;
+    }
+
+    /**
+     * @Description: 根据前端传入的会话ID删除会话
+     * @Author: liuzhilin
+     * @Date: 2025/3/12 19:41
+     * @return java.util.List<com.mxun.chatai.entity.ChatSession>
+     */
+    @GetMapping("/removeChatSession")
+    public void removeChatSession(@RequestParam("sessionId") String sessionId){
+        chatService.removeChatSession(sessionId);
     }
 
     /**

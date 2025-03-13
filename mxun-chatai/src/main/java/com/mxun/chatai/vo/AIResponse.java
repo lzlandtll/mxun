@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class AIResponse {
-    private String status; // 01: 开始 02: 进行中 03: 结束 04: 错误
+    private String status; // 01: 开始 02: 进行中 03: 结束
     private String into; // 提示信息
     private String content; // 内容
     private Integer contentIndex; // 输出顺序
@@ -34,11 +34,4 @@ public class AIResponse {
         aiResponse.setStatus("03");
         return aiResponse;
     }
-    public static AIResponse error(String info) {
-        AIResponse aiResponse = new AIResponse();
-        aiResponse.setStatus("04");
-        aiResponse.setInto(info);
-        return aiResponse;
-    }
-
 }

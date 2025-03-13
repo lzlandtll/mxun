@@ -2,6 +2,8 @@ package com.mxun.auth.vo;
 
 import lombok.Data;
 
+import java.util.Set;
+
 /**
  * @Description: 认证成功之后返回的vo
  * @Author: liuzhilin
@@ -14,4 +16,5 @@ public class UserVO {
     private String email;
     private String tel;
     private String token;
+    private Set<Long> roles;
 }

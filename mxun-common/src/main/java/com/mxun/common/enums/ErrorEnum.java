@@ -12,6 +12,7 @@ public enum ErrorEnum {
     SYS_REQUEST_LIMIT_ERROR("00001", "手速过快,请稍后再试..."),
     SYS_VALID_DATA_ERROR("00002", "数据格式错误..."),
     SYS_TEL_FORMAT_ERROR("00003", "电话号码格式错误..."),
+    SYS_ROLE_REPEAT_ADD_ERROR("00004", "权限已添加,请勿重复操作..."),
     USER_USERNAME_PASSWORD_NOT_BLANK_ERROR("01001", "用户信息不能为空..."),
     USER_USERNAME_PASSWORD_ERROR("01002", "用户名或密码错误..."),
     USER_TOKEN_EXPIRE_ERROR("01003", "登录失效,请重新登录..."),
@@ -30,7 +31,8 @@ public enum ErrorEnum {
     THIRD_SMS_CODE_VERIFY_ERROR("02004", "验证码错误,请确认验证码是否正确..."),
     THIRD_SMS_CODE_BLANK_ERROR("02005", "验证码不能为空..."),
     INTERFACE_PERMISSION_NOT_ENOUGH_ERROR("03001", "请开通AI助手服务权限..."),
-    CHAT_AI_CONTENT_NOT_BLANK_ERROR("04001", "消息内容不能为空...");
+    CHAT_AI_CONTENT_NOT_BLANK_ERROR("04001", "消息内容不能为空..."),
+    CHAT_AI_VALID_AI_KEY_ERROR("04002", "非法的AI密钥...");
 
     private String code;
     private String info;

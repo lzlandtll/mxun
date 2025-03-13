@@ -17,6 +17,3 @@ logging:
     org.springframework.cloud.gateway: DEBUG
 netty:
   port: 18080
-ai:
-  api:
-    key:

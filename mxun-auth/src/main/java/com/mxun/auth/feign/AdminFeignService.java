@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @Description: admin feign
@@ -15,5 +15,5 @@ import java.util.List;
 @FeignClient(name = "mxun-sys")
 public interface AdminFeignService {
     @GetMapping("/roleUser/getRolesByUserId")
-    ResultView<List<Long>> getRolesByUserId(@RequestParam("userId") Long userId);
+    ResultView<Set<Long>> getRolesByUserId(@RequestParam("userId") Long userId);
 }

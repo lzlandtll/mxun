@@ -47,4 +47,9 @@ public class User extends CommonEntity implements Serializable {
      * 用户类型(00:超级管理员,01:后台管理员,02:普通用户,03:三方用户)
      */
     private String userType;
+
+    /**
+     * 通义千问密钥
+     */
+    private String aiKey;
 }

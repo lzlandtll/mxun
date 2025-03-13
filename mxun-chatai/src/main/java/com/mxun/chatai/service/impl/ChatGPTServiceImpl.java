@@ -1,9 +1,11 @@
 package com.mxun.chatai.service.impl;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
 import com.alibaba.dashscope.aigc.generation.Generation;
 import com.alibaba.dashscope.aigc.generation.GenerationParam;
 import com.alibaba.dashscope.aigc.generation.GenerationResult;
 import com.alibaba.dashscope.common.Message;
+import com.alibaba.dashscope.exception.ApiException;
 import com.alibaba.dashscope.exception.InputRequiredException;
 import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.mxun.chatai.entity.ChatSession;
@@ -12,7 +14,9 @@ import com.mxun.chatai.service.ChatGPTService;
 import com.mxun.chatai.service.ChatSessionService;
 import com.mxun.chatai.vo.AIResponse;
 import com.mxun.chatai.websocket.WebSocketService;
+import com.mxun.common.enums.ErrorEnum;
 import com.mxun.common.resultView.ResultViewUtil;
+import com.mxun.common.utils.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,9 +41,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 public class ChatGPTServiceImpl implements ChatGPTService {
 
-    @Value("${ai.api.key}")
-    private String appKey;
-
     @Autowired
     private Generation generation;
 
@@ -52,9 +53,11 @@ public class ChatGPTServiceImpl implements ChatGPTService {
 
     // 异步请求gpt
     @Override
-    public void streamChat(String sessionId, Long userId, List<ChatSession.ChatMessage> chatMessageList) {
+    public void streamChat(String sessionId, List<ChatSession.ChatMessage> chatMessageList) {
 
         try {
+            Long userId = UserUtil.getUserId();
+            String aiKey = UserUtil.getAiKey();
             // 先拼接消息串
             List<Message> messageList = new ArrayList<>();
             chatMessageList.forEach(chatMessage -> {
@@ -67,7 +70,7 @@ public class ChatGPTServiceImpl implements ChatGPTService {
 
             // 构建查询参数
             GenerationParam param = GenerationParam.builder()
-                    .apiKey(appKey)
+                    .apiKey(aiKey)
                     .model(ChatModelEnum.QWEN_PLUS.getModel())
                     .messages(messageList)
                     .resultFormat(GenerationParam.ResultFormat.MESSAGE)
@@ -99,14 +102,18 @@ public class ChatGPTServiceImpl implements ChatGPTService {
                         }
                     })
                     .doFinally(signalType -> {
-                        log.info("数据输出完毕");
-                        webSocketService.sendMessageToUser(userId, ResultViewUtil.success("02", AIResponse.end()));
-                        // 保存系统回复的消息
-                        chatSessionService.pushSystemMessage(new ChatSession.ChatMessage(sessionId, aiContent.get()));
+                        if(StringUtils.isNotBlank(aiContent.get())){
+                            log.info("数据输出完毕");
+                            webSocketService.sendMessageToUser(userId, ResultViewUtil.success("02", AIResponse.end()));
+                            // 保存系统回复的消息
+                            chatSessionService.pushSystemMessage(new ChatSession.ChatMessage(sessionId, aiContent.get()));
+                        }
                     })
                     .onErrorResume(e -> {
                         log.error("数据输出异常", e);
-                        webSocketService.sendMessageToUser(userId, ResultViewUtil.success("02", AIResponse.error("数据输出异常")));
+                        if(e instanceof ApiException){
+                            webSocketService.sendMessageToUser(userId, ResultViewUtil.error(ErrorEnum.CHAT_AI_VALID_AI_KEY_ERROR, "02"));
+                        }
                         return Mono.empty();
                     })
                     .subscribeOn(Schedulers.boundedElastic()) // 异步执行任务

@@ -24,4 +24,7 @@ public interface ChatSessionService {
 
     // 保存AI回复用户的消息
     void pushSystemMessage(ChatSession.ChatMessage chatMessage);
+
+    // 根据前端传入的会话ID删除会话
+    void removeChatSession(String sessionId);
 }

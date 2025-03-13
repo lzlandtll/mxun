@@ -12,5 +12,5 @@ import java.util.List;
  */
 public interface ChatGPTService {
     // 异步请求gpt,方便回调推送消息
-    void streamChat(String sessionId, Long userId, List<ChatSession.ChatMessage> chatMessageList);
+    void streamChat(String sessionId, List<ChatSession.ChatMessage> chatMessageList);
 }

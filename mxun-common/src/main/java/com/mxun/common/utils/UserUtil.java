@@ -2,6 +2,7 @@ package com.mxun.common.utils;
 
 import com.mxun.common.constant.RedisConstant;
 import com.mxun.common.dto.UserInfoDTO;
+import com.mxun.common.enums.RoleEnum;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.redisson.api.RBucket;
@@ -9,8 +10,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Description: 用户工具类
@@ -44,11 +44,11 @@ public class UserUtil {
      * @Author: liuzhilin
      * @Date: 2025/3/9 11:31
      */
-    public static List<Long> getUserRoleList(){
+    public static Set<Long> getUserRoleList(){
         String userCacheKey = String.join(":", RedisConstant.USER_PREFIX, String.valueOf(userIdHolder.get()));
         RBucket<UserInfoDTO> bucket = redissonClient.getBucket(userCacheKey);
         UserInfoDTO userInfoDTO = bucket.get();
-        return userInfoDTO.getRoleList();
+        return Optional.of(userInfoDTO.getRoles()).orElse(new HashSet<>());
     }
 
     /**
@@ -70,6 +70,48 @@ public class UserUtil {
 
     public static Long getUserId() {
         return userIdHolder.get();
+    }
+
+    /**
+     * @Description: 获取用户aiKey
+     * @Author: liuzhilin
+     * @Date: 2025/3/12 21:09
+     */
+    public static String getAiKey() {
+        String userCacheKey = String.join(":", RedisConstant.USER_PREFIX, String.valueOf(userIdHolder.get()));
+        RBucket<UserInfoDTO> bucket = redissonClient.getBucket(userCacheKey);
+        UserInfoDTO userInfoDTO = bucket.get();
+        return userInfoDTO.getAiKey();
+    }
+
+    /**
+     * @Description: 删除用户aiKey
+     * @Author: liuzhilin
+     * @Date: 2025/3/13 9:38
+     */
+    public static void removeAiKey() {
+        String userCacheKey = String.join(":", RedisConstant.USER_PREFIX, String.valueOf(userIdHolder.get()));
+        RBucket<UserInfoDTO> bucket = redissonClient.getBucket(userCacheKey);
+        UserInfoDTO userInfoDTO = bucket.get();
+        userInfoDTO.setAiKey(null);
+        Set<Long> roleSet = userInfoDTO.getRoles();
+        roleSet.remove(RoleEnum.CHAT_AI.getRoleId());
+        bucket.set(userInfoDTO);
+    }
+
+    /**
+     * @Description: 设置用户aiKey,并且添加AI角色权限
+     * @Author: liuzhilin
+     * @Date: 2025/3/12 21:09
+     */
+    public static void setAiKey(String aiKey) {
+        String userCacheKey = String.join(":", RedisConstant.USER_PREFIX, String.valueOf(userIdHolder.get()));
+        RBucket<UserInfoDTO> bucket = redissonClient.getBucket(userCacheKey);
+        UserInfoDTO userInfoDTO = bucket.get();
+        userInfoDTO.setAiKey(aiKey);
+        Set<Long> roleList = userInfoDTO.getRoles();
+        roleList.add(RoleEnum.CHAT_AI.getRoleId());
+        bucket.set(userInfoDTO);
     }
 
 

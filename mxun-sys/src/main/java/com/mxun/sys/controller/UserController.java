@@ -20,9 +20,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("g")
-    public List<User> list() {
-        return userService.list();
+    @GetMapping("addAiKey")
+    public Long addAiKey(@RequestParam("aiKey") String aiKey) {
+        return userService.addAiKey(aiKey);
     }
 
+    @GetMapping("removeAiKey")
+    public Long removeAiKey() {
+        return userService.removeAiKey();
+    }
 }

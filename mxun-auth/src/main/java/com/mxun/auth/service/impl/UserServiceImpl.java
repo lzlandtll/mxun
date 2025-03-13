@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.mxun.auth.entity.table.UserTableDef.USER;
 
@@ -67,15 +68,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userVO.setToken(JwtTokenUtil.createJwtToken(user.getId().toString(), user.getUsername(), user.getEmail(), user.getTel(), user.getUserType(), 24 * 60 * 60 * 1000));
 
         // 登录成功之后,设置用户缓存信息
-        ResultView<List<Long>> resultView = adminFeignService.getRolesByUserId(user.getId());
+        ResultView<Set<Long>> resultView = adminFeignService.getRolesByUserId(user.getId());
         if(!Objects.equals(resultView.getCode(), ErrorEnum.SUCCESS.getCode())){
             throw new BusinessException(ErrorEnum.getError(resultView.getCode()));
         }
         UserInfoDTO userInfoDTO = new UserInfoDTO();
         userInfoDTO.setUserId(user.getId());
         BeanUtils.copyProperties(user, userInfoDTO);
-        userInfoDTO.setRoleList(resultView.getData());
+        userInfoDTO.setRoles(resultView.getData());
         UserUtil.setUserCache(userInfoDTO);
+        userVO.setRoles(resultView.getData());
         return userVO;
     }
 }

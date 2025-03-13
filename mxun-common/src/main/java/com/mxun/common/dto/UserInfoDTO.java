@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Description: redis用户缓存信息
@@ -27,6 +28,9 @@ public class UserInfoDTO implements Serializable {
     // 用户电话
     private String tel;
 
+    // 通义千问密钥
+    private String aiKey;
+
     // 用户角色
-    private List<Long> roleList;
+    private Set<Long> roles;
 }

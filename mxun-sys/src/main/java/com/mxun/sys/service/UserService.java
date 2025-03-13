@@ -15,4 +15,8 @@ public interface UserService extends IService<User> {
     void getRegisterSmsCode( String tel);
 
     void registerAccount(UserDTO userDTO);
+
+    Long addAiKey(String aiKey);
+
+    Long removeAiKey();
 }
