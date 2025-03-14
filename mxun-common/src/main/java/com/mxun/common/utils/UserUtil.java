@@ -44,11 +44,11 @@ public class UserUtil {
      * @Author: liuzhilin
      * @Date: 2025/3/9 11:31
      */
-    public static Set<Long> getUserRoleList(){
+    public static Set<String> getUserRoleList(){
         String userCacheKey = String.join(":", RedisConstant.USER_PREFIX, String.valueOf(userIdHolder.get()));
         RBucket<UserInfoDTO> bucket = redissonClient.getBucket(userCacheKey);
         UserInfoDTO userInfoDTO = bucket.get();
-        return Optional.of(userInfoDTO.getRoles()).orElse(new HashSet<>());
+        return Optional.of(userInfoDTO.getRoleCodes()).orElse(new HashSet<>());
     }
 
     /**
@@ -94,8 +94,8 @@ public class UserUtil {
         RBucket<UserInfoDTO> bucket = redissonClient.getBucket(userCacheKey);
         UserInfoDTO userInfoDTO = bucket.get();
         userInfoDTO.setAiKey(null);
-        Set<Long> roleSet = userInfoDTO.getRoles();
-        roleSet.remove(RoleEnum.CHAT_AI.getRoleId());
+        Set<String> roleCodeSet = userInfoDTO.getRoleCodes();
+        roleCodeSet.remove(RoleEnum.CHAT_AI.getRoleCode());
         bucket.set(userInfoDTO);
     }
 
@@ -109,8 +109,8 @@ public class UserUtil {
         RBucket<UserInfoDTO> bucket = redissonClient.getBucket(userCacheKey);
         UserInfoDTO userInfoDTO = bucket.get();
         userInfoDTO.setAiKey(aiKey);
-        Set<Long> roleList = userInfoDTO.getRoles();
-        roleList.add(RoleEnum.CHAT_AI.getRoleId());
+        Set<String> roleCodes = userInfoDTO.getRoleCodes();
+        roleCodes.add(RoleEnum.CHAT_AI.getRoleCode());
         bucket.set(userInfoDTO);
     }
 

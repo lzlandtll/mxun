@@ -26,9 +26,9 @@ public class RoleUserController {
      * @Author: liuzhilin
      * @Date: 2025/3/9 18:02
      */
-    @GetMapping("getRolesByUserId")
-    public Set<Long> getRolesByUserId(@RequestParam("userId") Long userId) {
-        return roleUserService.getRolesByUserId(userId);
+    @GetMapping("getRoleCodesByUserId")
+    public Set<String> getRoleCodesByUserId(@RequestParam("userId") Long userId) {
+        return roleUserService.getRoleCodesByUserId(userId);
     }
 
 }

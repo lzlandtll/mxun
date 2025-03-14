@@ -37,8 +37,8 @@ public class RoleApiServiceImpl extends ServiceImpl<RoleApiMapper, RoleApi> impl
         Map<String, List<RoleApi>> apiCodeRoles = roleApiList.stream().collect(Collectors.groupingBy(RoleApi::getApiCode));
         apiCodeRoles.forEach((apiCode, roleApis) -> {
             String key = String.join(":", RedisConstant.PERMISSION_INTERFACES_PREFIX, apiCode);
-            RSet<Long> apiRoleSet = redissonClient.getSet(key);
-            apiRoleSet.addAll(roleApis.stream().map(RoleApi::getRoleId).collect(Collectors.toSet()));
+            RSet<String> apiRoleCodeSet = redissonClient.getSet(key);
+            apiRoleCodeSet.addAll(roleApis.stream().map(RoleApi::getRoleCode).collect(Collectors.toSet()));
         });
     }
 }

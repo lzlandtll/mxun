@@ -21,12 +21,12 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("addAiKey")
-    public Long addAiKey(@RequestParam("aiKey") String aiKey) {
-        return userService.addAiKey(aiKey);
+    public void addAiKey(@RequestParam("aiKey") String aiKey) {
+        userService.addAiKey(aiKey);
     }
 
     @GetMapping("removeAiKey")
-    public Long removeAiKey() {
-        return userService.removeAiKey();
+    public void removeAiKey() {
+        userService.removeAiKey();
     }
 }

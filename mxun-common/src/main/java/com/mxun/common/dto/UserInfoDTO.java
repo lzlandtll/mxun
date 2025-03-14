@@ -32,5 +32,5 @@ public class UserInfoDTO implements Serializable {
     private String aiKey;
 
     // 用户角色
-    private Set<Long> roles;
+    private Set<String> roleCodes;
 }

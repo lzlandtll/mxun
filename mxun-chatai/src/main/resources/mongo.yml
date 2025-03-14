@@ -1,4 +1,4 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://root:123qwer!@192.168.50.128:27017/chatgpt?authSource=admin
+      uri: mongodb://root:123qwer!@192.168.50.130:27017/chatgpt?authSource=admin

@@ -6,21 +6,21 @@ package com.mxun.common.enums;
  * @Date: 2025/3/4
  */
 public enum RoleEnum {
-    CHAT_AI(1L, "AI功能角色");
+    CHAT_AI("CHAT_AI", "AI功能角色");
 
-    RoleEnum(Long roleId, String roleName){
-        this.roleId = roleId;
+    RoleEnum(String roleCode, String roleName){
+        this.roleCode = roleCode;
         this.roleName = roleName;
     }
-    private Long roleId;
+    private String roleCode;
     private String roleName;
 
-    public Long getRoleId() {
-        return roleId;
+    public String getRoleCode() {
+        return roleCode;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
     }
 
     public String getRoleName() {

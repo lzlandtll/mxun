@@ -13,7 +13,7 @@ import java.util.Set;
  * @Date: 2025/3/8
  */
 @FeignClient(name = "mxun-sys")
-public interface AdminFeignService {
-    @GetMapping("/roleUser/getRolesByUserId")
-    ResultView<Set<Long>> getRolesByUserId(@RequestParam("userId") Long userId);
+public interface SysFeignService {
+    @GetMapping("/roleUser/getRoleCodesByUserId")
+    ResultView<Set<String>> getRoleCodesByUserId(@RequestParam("userId") Long userId);
 }

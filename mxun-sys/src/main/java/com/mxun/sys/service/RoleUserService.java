@@ -14,9 +14,9 @@ import java.util.Set;
  */
 public interface RoleUserService extends IService<RoleUser> {
 
-    Set<Long> getRolesByUserId(Long userId);
+    Set<String> getRoleCodesByUserId(Long userId);
 
-    void addRoleUser(Long userId, Long roleId);
+    void addRoleUser(Long userId, String roleCode);
 
-    void removeRoleUser(Long userId, Long roleId);
+    void removeRoleUser(Long userId, String roleCode);
 }

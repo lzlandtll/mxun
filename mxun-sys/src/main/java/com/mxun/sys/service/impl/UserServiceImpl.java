@@ -106,25 +106,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Transactional
     @Override
-    public Long addAiKey(String aiKey) {
-        roleUserService.addRoleUser(UserUtil.getUserId(), RoleEnum.CHAT_AI.getRoleId());
+    public String addAiKey(String aiKey) {
+        roleUserService.addRoleUser(UserUtil.getUserId(), RoleEnum.CHAT_AI.getRoleCode());
 
         User user = new User();
         user.setId(UserUtil.getUserId());
         user.setAiKey(aiKey);
         this.updateById(user);
         UserUtil.setAiKey(aiKey);
-        return RoleEnum.CHAT_AI.getRoleId();
+        String roleCode = RoleEnum.CHAT_AI.getRoleCode();
+        return roleCode;
     }
 
     @Transactional
     @Override
-    public Long removeAiKey() {
-        roleUserService.removeRoleUser(UserUtil.getUserId(), RoleEnum.CHAT_AI.getRoleId());
+    public String removeAiKey() {
+        roleUserService.removeRoleUser(UserUtil.getUserId(), RoleEnum.CHAT_AI.getRoleCode());
         User user = new User();
         user.setId(UserUtil.getUserId());
         user.setAiKey("");
         this.updateById(user);
-        return RoleEnum.CHAT_AI.getRoleId();
+        return RoleEnum.CHAT_AI.getRoleCode();
     }
 }

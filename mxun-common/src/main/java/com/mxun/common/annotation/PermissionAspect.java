@@ -46,10 +46,10 @@ public class PermissionAspect {
         // 这里不能直接使用apiRoleSet,可能会清空这里面的数据
         HashSet<Long> apiRoleSetCopy = new HashSet<>(apiRoleSet);
         // 获取用户角色
-        Set<Long> userRoleList = UserUtil.getUserRoleList();
+        Set<String> userRoleCodeList = UserUtil.getUserRoleList();
 
         // 用户角色与拥有接口权限的角色有交集则标识有权限
-        apiRoleSetCopy.retainAll(userRoleList);
+        apiRoleSetCopy.retainAll(userRoleCodeList);
         if(!apiRoleSetCopy.isEmpty()){
             return joinPoint.proceed();
         }

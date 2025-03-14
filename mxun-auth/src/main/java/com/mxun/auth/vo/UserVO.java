@@ -16,5 +16,5 @@ public class UserVO {
     private String email;
     private String tel;
     private String token;
-    private Set<Long> roles;
+    private Set<String> roleCodes;
 }

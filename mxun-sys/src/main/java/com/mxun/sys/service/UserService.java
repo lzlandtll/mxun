@@ -16,7 +16,7 @@ public interface UserService extends IService<User> {
 
     void registerAccount(UserDTO userDTO);
 
-    Long addAiKey(String aiKey);
+    String addAiKey(String aiKey);
 
-    Long removeAiKey();
+    String removeAiKey();
 }

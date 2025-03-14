@@ -27,37 +27,37 @@ import java.util.stream.Collectors;
 public class RoleUserServiceImpl extends ServiceImpl<RoleUserMapper, RoleUser> implements RoleUserService {
 
     @Override
-    public Set<Long> getRolesByUserId(Long userId) {
+    public Set<String> getRoleCodesByUserId(Long userId) {
         QueryWrapper query = this.query();
-        query.select(RoleUser::getRoleId);
+        query.select(RoleUser::getRoleCode);
         query.eq(RoleUser::getUserId, userId);
         List<RoleUser> list = list(query);
         if(!CollectionUtils.isEmpty(list)){
-            return list.stream().map(RoleUser::getRoleId).collect(Collectors.toSet());
+            return list.stream().map(RoleUser::getRoleCode).collect(Collectors.toSet());
         }
         return new HashSet<>();
     }
 
     @Override
-    public void addRoleUser(Long userId, Long roleId) {
+    public void addRoleUser(Long userId, String roleCode) {
         QueryWrapper query = this.query();
         query.eq(RoleUser::getUserId, userId);
-        query.eq(RoleUser::getRoleId, roleId);
+        query.eq(RoleUser::getRoleCode, roleCode);
         RoleUser roleUserDb = this.getOne(query);
         if(Objects.nonNull(roleUserDb)){
             throw new BusinessException(ErrorEnum.SYS_ROLE_REPEAT_ADD_ERROR);
         }
         RoleUser roleUser = new RoleUser();
         roleUser.setUserId(userId);
-        roleUser.setRoleId(roleId);
+        roleUser.setRoleCode(roleCode);
         this.save(roleUser);
     }
 
     @Override
-    public void removeRoleUser(Long userId, Long roleId) {
+    public void removeRoleUser(Long userId, String roleCode) {
         QueryWrapper query = this.query();
         query.eq(RoleUser::getUserId, userId);
-        query.eq(RoleUser::getRoleId, roleId);
+        query.eq(RoleUser::getRoleCode, roleCode);
         this.remove(query);
 
         UserUtil.removeAiKey();

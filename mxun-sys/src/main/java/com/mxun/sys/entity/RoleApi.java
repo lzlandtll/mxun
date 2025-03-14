@@ -28,7 +28,7 @@ public class RoleApi extends CommonEntity implements Serializable {
     /**
      * 角色id
      */
-    private Long roleId;
+    private String roleCode;
 
     /**
      * 接口code

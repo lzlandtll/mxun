@@ -1,7 +1,7 @@
 package com.mxun.auth.service.impl;
 
 import com.alibaba.cloud.commons.lang.StringUtils;
-import com.mxun.auth.feign.AdminFeignService;
+import com.mxun.auth.feign.SysFeignService;
 import com.mxun.auth.vo.UserVO;
 import com.mxun.common.dto.UserInfoDTO;
 import com.mxun.common.resultView.BusinessException;
@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -36,7 +35,7 @@ import static com.mxun.auth.entity.table.UserTableDef.USER;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
-    private AdminFeignService adminFeignService;
+    private SysFeignService sysFeignService;
 
     @Override
     public UserVO commonUserLogin(User userDTO, ArrayList<String> userTypeList) {
@@ -68,16 +67,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userVO.setToken(JwtTokenUtil.createJwtToken(user.getId().toString(), user.getUsername(), user.getEmail(), user.getTel(), user.getUserType(), 24 * 60 * 60 * 1000));
 
         // 登录成功之后,设置用户缓存信息
-        ResultView<Set<Long>> resultView = adminFeignService.getRolesByUserId(user.getId());
+        ResultView<Set<String>> resultView = sysFeignService.getRoleCodesByUserId(user.getId());
         if(!Objects.equals(resultView.getCode(), ErrorEnum.SUCCESS.getCode())){
             throw new BusinessException(ErrorEnum.getError(resultView.getCode()));
         }
         UserInfoDTO userInfoDTO = new UserInfoDTO();
         userInfoDTO.setUserId(user.getId());
         BeanUtils.copyProperties(user, userInfoDTO);
-        userInfoDTO.setRoles(resultView.getData());
+        userInfoDTO.setRoleCodes(resultView.getData());
         UserUtil.setUserCache(userInfoDTO);
-        userVO.setRoles(resultView.getData());
+        userVO.setRoleCodes(resultView.getData());
         return userVO;
     }
 }
