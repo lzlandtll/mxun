@@ -1,5 +1,7 @@
 package com.mxun.common.annotation;
 
+import com.mxun.common.enums.ErrorEnum;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,5 +19,5 @@ public @interface Permission {
     String apiCode();
 
     // 错误编码: 使用ErrorEnum里面具体项的错误编码
-    String errorCode();
+    ErrorEnum error();
 }

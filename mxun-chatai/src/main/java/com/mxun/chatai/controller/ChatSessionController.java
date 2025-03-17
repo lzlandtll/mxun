@@ -4,6 +4,7 @@ import com.mxun.chatai.entity.ChatSession;
 import com.mxun.chatai.service.ChatSessionService;
 import com.mxun.chatai.dto.ChatMessageVO;
 import com.mxun.common.annotation.Permission;
+import com.mxun.common.enums.ErrorEnum;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +33,7 @@ public class ChatSessionController {
      * @Date: 2025/3/9 16:47
      */
     @PostMapping("/sendMessage")
-    @Permission(apiCode = "CHAT_AI.CHAT_SESSION.SEND_MESSAGE", errorCode = "03001")
+    @Permission(apiCode = "CHAT_AI.CHAT_SESSION.SEND_MESSAGE", error = ErrorEnum.INTERFACE_PERMISSION_NOT_ENOUGH_ERROR)
     public ChatSession sendMessage(@Valid @RequestBody ChatMessageVO chatMessageVO) {
         return chatService.sendMessage(chatMessageVO);
     }

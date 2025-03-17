@@ -37,7 +37,7 @@ public class PermissionAspect {
         }
 
         String apiCode = permission.apiCode();
-        String errorCode = permission.errorCode();
+        ErrorEnum error = permission.error();
 
         // 获取拥有该接口权限的角色
         String key = String.join(":", RedisConstant.PERMISSION_INTERFACES_PREFIX, apiCode);
@@ -55,7 +55,7 @@ public class PermissionAspect {
         }
 
         // 否则抛出异常
-        throw new BusinessException(ErrorEnum.getError(errorCode));
+        throw new BusinessException(error);
     }
 
     private Class<?>[] getParameterTypes(ProceedingJoinPoint joinPoint) {
