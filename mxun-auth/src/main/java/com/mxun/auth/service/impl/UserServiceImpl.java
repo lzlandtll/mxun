@@ -20,6 +20,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
@@ -44,7 +46,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         String decodePassword;
         try {
-            decodePassword = RSADecoder.decode(userDTO.getPassword());
+            String rawPassword = RSADecoder.decode(userDTO.getPassword());
+            if(rawPassword.indexOf("@") == -1){
+                throw new BusinessException(ErrorEnum.USER_USERNAME_PASSWORD_ERROR);
+            }
+            String[] split = rawPassword.split("@", 2);
+
+            long webTimestamp = Long.parseLong(split[0]);
+            ZoneId shanghaiZone = ZoneId.of("Asia/Shanghai");
+            ZonedDateTime nowInShanghai = ZonedDateTime.now(shanghaiZone);
+            long currentTimestamp = nowInShanghai.toInstant().toEpochMilli();
+            if(currentTimestamp - webTimestamp > 5 * 1000){
+                throw new BusinessException(ErrorEnum.SYS_TIME_OUT_ERROR);
+            }
+
+            decodePassword = split[1];
         }catch (Exception e){
             throw new BusinessException(ErrorEnum.USER_USERNAME_PASSWORD_ERROR);
         }

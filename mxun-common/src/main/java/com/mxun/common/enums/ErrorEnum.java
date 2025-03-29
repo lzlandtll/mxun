@@ -13,6 +13,7 @@ public enum ErrorEnum {
     SYS_VALID_DATA_ERROR("00002", "数据格式错误..."),
     SYS_TEL_FORMAT_ERROR("00003", "电话号码格式错误..."),
     SYS_ROLE_REPEAT_ADD_ERROR("00004", "权限已添加,请勿重复操作..."),
+    SYS_TIME_OUT_ERROR("00005", "网络超时,请稍后再试..."),
     USER_USERNAME_PASSWORD_NOT_BLANK_ERROR("01001", "用户信息不能为空..."),
     USER_USERNAME_PASSWORD_ERROR("01002", "用户名或密码错误..."),
     USER_TOKEN_EXPIRE_ERROR("01003", "登录失效,请重新登录..."),
