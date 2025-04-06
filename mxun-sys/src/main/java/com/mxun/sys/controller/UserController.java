@@ -2,6 +2,8 @@ package com.mxun.sys.controller;
 
 import com.mxun.sys.entity.User;
 import com.mxun.sys.service.UserService;
+import com.mxun.sys.vo.UserVO;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
 
     @GetMapping("addAiKey")
     public void addAiKey(@RequestParam("aiKey") String aiKey) {

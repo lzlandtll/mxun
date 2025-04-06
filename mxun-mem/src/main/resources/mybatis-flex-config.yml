@@ -1,0 +1,11 @@
+mybatis-flex:
+  check-config-location: false
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  datasource:
+    master:
+      type: druid
+      url: jdbc:mysql://192.168.50.138:3306/mxun-mem?characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true
+      username: root
+      password: 123456
+      asyncInit: true

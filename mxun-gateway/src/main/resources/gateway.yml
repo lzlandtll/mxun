@@ -43,3 +43,31 @@ spring:
             - Path=/api/sys/**
           filters:
             - RewritePath=/api/sys/(?<segment>.*),/$\{segment}
+
+        - id: mxun-art-open
+          uri: lb://mxun-art
+          predicates:
+            - Path=/open/art/**
+          filters:
+            - RewritePath=/open/art/(?<segment>.*),/open/$\{segment}
+
+        - id: mxun-art
+          uri: lb://mxun-art
+          predicates:
+            - Path=/api/art/**
+          filters:
+            - RewritePath=/api/art/(?<segment>.*),/$\{segment}
+
+        - id: mxun-mem-open
+          uri: lb://mxun-mem
+          predicates:
+            - Path=/open/mem/**
+          filters:
+            - RewritePath=/open/mem/(?<segment>.*),/open/$\{segment}
+
+        - id: mxun-mem
+          uri: lb://mxun-mem
+          predicates:
+            - Path=/api/mem/**
+          filters:
+            - RewritePath=/api/mem/(?<segment>.*),/$\{segment}

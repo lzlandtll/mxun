@@ -30,6 +30,11 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
         <!-- 生成文件时需要采用jdbc模式连接数据库 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -41,6 +46,21 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version> <!-- 使用最新版本 -->
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.18</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
     <!--  依赖管理,后面需要的依赖直接从这里面进行获取  -->

@@ -1,0 +1,31 @@
+package com.mxun.mem.mapper;
+
+import com.mxun.mem.entity.KafkaMessage;
+import com.mybatisflex.core.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+/**
+ *  映射层。
+ *
+ * @author moxuan
+ * @since 2025-04-05
+ */
+public interface KafkaMessageMapper extends BaseMapper<KafkaMessage> {
+
+    @Select(" select * " +
+            " from sys_kafka_message " +
+            " where is_deleted = 0 " +
+            "   and status = #{status} " +
+            "   and create_time > #{startTime} " +
+            "   and id > #{lastId}" +
+            " limit #{pageSize}" +
+            " for update")
+    List<KafkaMessage> getFailMessageList(@Param("status") String status
+            , @Param("startTime") LocalDateTime startTime
+            , @Param("lastId") Long lastId
+            , @Param("pageSize") Integer pageSize);
+}

@@ -29,6 +29,11 @@ public class User extends CommonEntity implements Serializable {
     private String username;
 
     /**
+     * 个人介绍
+     */
+    private String summary;
+
+    /**
      * 密码哈希值
      */
     private String password;

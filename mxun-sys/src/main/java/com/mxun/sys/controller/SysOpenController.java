@@ -4,7 +4,11 @@ import com.mxun.sys.dto.UserDTO;
 import com.mxun.sys.feign.ThirdPartyFeignService;
 import com.mxun.sys.service.UserService;
 import com.mxun.common.annotation.IpLimitRequest;
+import com.mxun.sys.stream.KafkaProducerService;
+import com.mxun.sys.vo.UserVO;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +31,14 @@ public class SysOpenController {
     @Autowired
     private ThirdPartyFeignService thirdPartyFeignService;
 
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
+
+
+    @GetMapping("productKafkaMessage")
+    public void contextLoads() {
+        kafkaProducerService.sendMessage("test-topic", "1", "test123...");
+    }
 
     @IpLimitRequest(path = "/admin/open/getRegisterSmsCode", limit = 100, expireSecond = 300)
     @GetMapping("getRegisterSmsCode")
@@ -39,4 +51,8 @@ public class SysOpenController {
         userService.registerAccount(userDTO);
     }
 
+    @GetMapping("getUserById")
+    public UserVO getUserById(@RequestParam("userId") @NotNull(message = "01013") Long userId) {
+        return userService.getUserById(userId);
+    }
 }

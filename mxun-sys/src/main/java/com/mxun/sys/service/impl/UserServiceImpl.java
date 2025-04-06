@@ -4,8 +4,10 @@ package com.mxun.sys.service.impl;
 import com.alibaba.cloud.commons.lang.StringUtils;
 import com.mxun.common.enums.*;
 import com.mxun.common.utils.UserUtil;
+import com.mxun.sys.dto.SyncUserDTO;
 import com.mxun.sys.dto.UserDTO;
 import com.mxun.sys.entity.User;
+import com.mxun.sys.feign.MemFeignService;
 import com.mxun.sys.feign.ThirdPartyFeignService;
 import com.mxun.sys.mapper.UserMapper;
 import com.mxun.sys.service.RoleUserService;
@@ -15,13 +17,18 @@ import com.mxun.common.resultView.BusinessException;
 import com.mxun.common.resultView.ResultView;
 import com.mxun.common.utils.RSADecoder;
 import com.mxun.common.utils.TextDigester;
+import com.mxun.sys.stream.KafkaProducerService;
+import com.mxun.sys.vo.UserVO;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * 用户基本信息表 服务层实现
@@ -31,11 +38,21 @@ import java.util.Objects;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    @Value("${custom.kafka.sync-user-topic}")
+    private String syncUserTopic;
+
     @Autowired
     private ThirdPartyFeignService thirdPartyFeignService;
 
     @Autowired
     private RoleUserService roleUserService;
+
+    @Autowired
+    private MemFeignService memFeignService;
+
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
+
 
     @Override
     public void getRegisterSmsCode(String tel) {
@@ -59,6 +76,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
     }
 
+    @Transactional
     @Override
     public void registerAccount(UserDTO userDTO) {
         String decodePassword = RSADecoder.decode(userDTO.getPassword());
@@ -95,13 +113,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(Objects.nonNull(existUser)){
             throw new BusinessException(ErrorEnum.USER_TEL_REGISTERED_ERROR);
         }
-        User user = new User();
-        User build = user.builder()
+        String username;
+        while (true){
+            // 生成一个随机用户名
+            username = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
+            query = this.query();
+            query.eq(User::getUsername, username);
+            User userDb = getOne(query);
+            if(Objects.isNull(userDb)){
+                break;
+            }
+        }
+        User user = User.builder()
+                .username(username)
                 .password(TextDigester.digest(decodePassword))
                 .tel(userDTO.getTel())
                 .userType(UserTypeEnum.COMMON_USER.getUserType())
                 .build();
-        super.save(build);
+        super.save(user);
+
+        // 同步用户数据到会员模块
+        SyncUserDTO syncUserDTO = new SyncUserDTO();
+        BeanUtils.copyProperties(user, syncUserDTO);
+        ResultView resultView = memFeignService.syncSysUser(syncUserDTO);
+        if(!Objects.equals(resultView.getCode(), ErrorEnum.SUCCESS.getCode())){
+            kafkaProducerService.sendMessage(syncUserTopic, syncUserDTO.getId(), syncUserDTO);
+        }
     }
 
     @Transactional
@@ -127,5 +164,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setAiKey("");
         this.updateById(user);
         return RoleEnum.CHAT_AI.getRoleCode();
+    }
+
+    @Override
+    public UserVO getUserById(Long userId) {
+        User user = getById(userId);
+        if(Objects.isNull(user)){
+            throw new BusinessException(ErrorEnum.USER_ID_VALID_ERROR);
+        }
+        UserVO userVO = new UserVO();
+        userVO.setUserId(user.getId());
+        userVO.setUsername(user.getUsername());
+        userVO.setSummary(user.getSummary());
+        return userVO;
     }
 }

@@ -17,4 +17,7 @@ public class RedisConstant {
 
     // 用户缓存前缀
     public static final String USER_PREFIX = "USER_CACHE";
+
+    // 存储失败kafka消息的游标前缀
+    public static final String FAIL_KAFKA_CURSOR = "FAIL_KAFKA_CURSOR";
 }
