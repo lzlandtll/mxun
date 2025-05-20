@@ -14,7 +14,7 @@ spring:
           predicates:
             - Path=/api/chatai/**
           filters:
-            - RewritePath=/api/chatai/(?<segment>.*),/$\{segment}
+            - RewritePath=/api/chatai/(?<segment>.*),/api/$\{segment}
 
         - id: mxun-chatai-third
           uri: lb://mxun-chatai
@@ -42,7 +42,7 @@ spring:
           predicates:
             - Path=/api/sys/**
           filters:
-            - RewritePath=/api/sys/(?<segment>.*),/$\{segment}
+            - RewritePath=/api/sys/(?<segment>.*),/api/$\{segment}
 
         - id: mxun-art-open
           uri: lb://mxun-art
@@ -56,7 +56,7 @@ spring:
           predicates:
             - Path=/api/art/**
           filters:
-            - RewritePath=/api/art/(?<segment>.*),/$\{segment}
+            - RewritePath=/api/art/(?<segment>.*),/api/$\{segment}
 
         - id: mxun-mem-open
           uri: lb://mxun-mem
@@ -70,4 +70,4 @@ spring:
           predicates:
             - Path=/api/mem/**
           filters:
-            - RewritePath=/api/mem/(?<segment>.*),/$\{segment}
+            - RewritePath=/api/mem/(?<segment>.*),/api/$\{segment}

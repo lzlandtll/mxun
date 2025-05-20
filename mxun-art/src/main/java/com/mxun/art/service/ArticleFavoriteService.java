@@ -11,4 +11,9 @@ import com.mxun.art.entity.ArticleFavorite;
  */
 public interface ArticleFavoriteService extends IService<ArticleFavorite> {
 
+    ArticleFavorite onFavorite(Long articleId);
+
+    void cancelFavorite(Long articleId);
+
+    Boolean hasFavorite(Long articleId);
 }

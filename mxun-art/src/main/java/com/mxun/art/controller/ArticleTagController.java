@@ -21,7 +21,7 @@ import java.util.List;
  * @since 2025-03-30
  */
 @RestController
-@RequestMapping("/articleTag")
+@RequestMapping("/api/articleTag")
 public class ArticleTagController {
 
     @Autowired

@@ -15,7 +15,7 @@ import java.util.List;
  * @since 2025-03-31
  */
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/api/category")
 public class CategoryController {
 
     @Autowired
@@ -27,8 +27,8 @@ public class CategoryController {
     }
 
     @GetMapping("getCategoryList")
-    public List<Category> getCategoryList() {
-        return categoryService.getCategoryList();
+    public List<Category> getCategoryList(@RequestParam("userId") Long userId) {
+        return categoryService.getCategoryList(userId);
     }
 
 }

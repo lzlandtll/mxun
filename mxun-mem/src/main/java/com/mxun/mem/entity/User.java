@@ -1,5 +1,6 @@
 package com.mxun.mem.entity;
 
+import com.mxun.common.core.CommonEntity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
@@ -27,16 +28,10 @@ import lombok.experimental.Accessors;
 @Data(staticConstructor = "create")
 @EqualsAndHashCode(callSuper = true)
 @Table("mem_user")
-public class User extends Model<User> {
+public class User extends CommonEntity implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * 主键
-     */
-    @Id(keyType = KeyType.Auto)
-    private Long id;
+    private static final long serialVersionUID = 10020247L;
 
     /**
      * 编写文章总数
@@ -57,35 +52,5 @@ public class User extends Model<User> {
      * 粉丝数量
      */
     private Long followCount;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 创建人ID
-     */
-    private String createBy;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
-     * 修改用户ID
-     */
-    private String updateBy;
-
-    /**
-     * 逻辑删除标志(0: 未删除, 1: 已删除, 默认为0)
-     */
-    private Boolean isDeleted;
-
-    /**
-     * 版本号
-     */
-    private Integer version;
 
 }

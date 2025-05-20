@@ -14,7 +14,7 @@ import java.util.Set;
  * @Date: 2025/3/9 18:01
  */
 @RestController
-@RequestMapping("/roleUser")
+@RequestMapping("/api/roleUser")
 public class RoleUserController {
 
     @Autowired

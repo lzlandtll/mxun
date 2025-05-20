@@ -14,7 +14,7 @@ public class MyBatisFlexGenerator {
         public static void main(String[] args) {
             //配置数据源
             HikariDataSource dataSource = new HikariDataSource();
-            dataSource.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/mxun-admin?characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true");
+            dataSource.setJdbcUrl("jdbc:mysql://192.168.50.138:3306/mxun-sys?characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true");
             dataSource.setUsername("root");
             dataSource.setPassword("123456");
 
@@ -33,11 +33,11 @@ public class MyBatisFlexGenerator {
             GlobalConfig globalConfig = new GlobalConfig();
 
             //设置根包
-            globalConfig.setBasePackage("com.mxun.admin");
+            globalConfig.setBasePackage("com.mxun.sys");
 
             //设置表前缀和只生成哪些表
-            globalConfig.setTablePrefix("admin_");
-            globalConfig.setGenerateTable("admin_role_user");
+            globalConfig.setTablePrefix("sys_");
+            globalConfig.setGenerateTable("sys_kafka_message");
 
             // 设置jdk
             globalConfig.setEntityJdkVersion(17);

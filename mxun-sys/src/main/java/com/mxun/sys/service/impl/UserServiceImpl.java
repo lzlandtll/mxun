@@ -18,8 +18,12 @@ import com.mxun.common.resultView.ResultView;
 import com.mxun.common.utils.RSADecoder;
 import com.mxun.common.utils.TextDigester;
 import com.mxun.sys.stream.KafkaProducerService;
-import com.mxun.sys.vo.UserVO;
+import com.mxun.sys.vo.PersonalUserVO;
+import com.mxun.sys.vo.PublicUserVO;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.row.Row;
+import com.mybatisflex.core.update.UpdateChain;
+import com.mybatisflex.core.update.UpdateWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.mxun.sys.entity.table.UserTableDef.USER;
 /**
  * 用户基本信息表 服务层实现
  * @author moxuan
@@ -167,15 +172,59 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public UserVO getUserById(Long userId) {
+    public PublicUserVO getUserById(Long userId) {
         User user = getById(userId);
         if(Objects.isNull(user)){
             throw new BusinessException(ErrorEnum.USER_ID_VALID_ERROR);
         }
-        UserVO userVO = new UserVO();
-        userVO.setUserId(user.getId());
-        userVO.setUsername(user.getUsername());
-        userVO.setSummary(user.getSummary());
-        return userVO;
+        PublicUserVO publicUserVO = new PublicUserVO();
+        publicUserVO.setUserId(user.getId());
+        publicUserVO.setUsername(user.getUsername());
+        publicUserVO.setSummary(user.getSummary());
+        return publicUserVO;
+    }
+
+    @Override
+    public PersonalUserVO getPersonalUserInfo() {
+        User userDb = getById(UserUtil.getUserId());
+        PersonalUserVO personalUserVO = new PersonalUserVO();
+        personalUserVO.setUserId(userDb.getId());
+        personalUserVO.setUsername(userDb.getUsername());
+        personalUserVO.setSummary(userDb.getSummary());
+        personalUserVO.setEmail(userDb.getEmail());
+        personalUserVO.setTel(userDb.getTel());
+        return personalUserVO;
+    }
+
+    @Override
+    public void savePersonalUserInfo(PersonalUserVO personalUserVO) {
+        Long userId = UserUtil.getUserId();
+
+        QueryWrapper query = this.query();
+        query.ne(User::getId, userId);
+        query.and(USER.USERNAME.eq(personalUserVO.getUsername())
+                .or(USER.TEL.eq(personalUserVO.getTel()))
+                .or(USER.EMAIL.eq(personalUserVO.getEmail())));
+        User userDb = getOne(query);
+
+        if(Objects.nonNull(userDb)){
+            if(Objects.equals(userDb.getUsername(), personalUserVO.getUsername())){
+                throw new BusinessException(ErrorEnum.USER_NAME_ALREADY_EXIST_ERROR);
+            }
+            if (Objects.equals(userDb.getTel(), personalUserVO.getTel())){
+                throw new BusinessException(ErrorEnum.USER_TEL_ALREADY_EXIST_ERROR);
+            }
+            if (Objects.equals(userDb.getEmail(), personalUserVO.getEmail())){
+                throw new BusinessException(ErrorEnum.USER_EMAIL_ALREADY_EXIST_ERROR);
+            }
+        }
+
+        UpdateChain.of(User.class)
+                .set(User::getEmail, personalUserVO.getEmail())
+                .set(User::getTel, personalUserVO.getTel())
+                .set(User::getSummary, personalUserVO.getSummary())
+                .set(User::getUsername, personalUserVO.getUsername())
+                .where(User::getId).eq(userId)
+                .update();
     }
 }

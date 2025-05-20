@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Validated
 @RestController
-@RequestMapping("/chatSession")
+@RequestMapping("/api/chatSession")
 public class ChatSessionController {
 
 

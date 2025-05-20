@@ -14,6 +14,6 @@ import java.util.Set;
  */
 @FeignClient(name = "mxun-sys")
 public interface SysFeignService {
-    @GetMapping("/roleUser/getRoleCodesByUserId")
+    @GetMapping("/api/roleUser/getRoleCodesByUserId")
     ResultView<Set<String>> getRoleCodesByUserId(@RequestParam("userId") Long userId);
 }

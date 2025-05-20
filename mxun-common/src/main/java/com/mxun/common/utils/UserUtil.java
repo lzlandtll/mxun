@@ -5,6 +5,7 @@ import com.mxun.common.dto.UserInfoDTO;
 import com.mxun.common.enums.RoleEnum;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.http.HttpHeaders;
@@ -17,9 +18,11 @@ import java.util.*;
  * @Author: liuzhilin
  * @Date: 2025/3/6
  */
+@Slf4j
 @Component
 public class UserUtil {
     private static final ThreadLocal<Long> userIdHolder = new ThreadLocal<>();
+    private static final ThreadLocal<String> userTokenHolder = new ThreadLocal<>();
 
 
     private static RedissonClient redissonClient;
@@ -59,17 +62,38 @@ public class UserUtil {
     public static void setUserId(HttpServletRequest request) {
         try {
             Enumeration<String> headers = request.getHeaders(HttpHeaders.AUTHORIZATION);
+            if(Objects.equals(headers, null) || !headers.hasMoreElements()){
+                return;
+            }
             String authHeader = headers.nextElement();
+            if(Objects.equals(authHeader, null)){
+                return;
+            }
             String token = authHeader.substring(7);
             Claims claims = JwtTokenUtil.validateToken(token);
             userIdHolder.set(Long.valueOf(claims.getSubject()));
+            userTokenHolder.set(token);
         }catch (Exception e){
             System.out.println("解析用户token失败");
+            log.error("e => ", e);
         }
     }
 
     public static Long getUserId() {
         return userIdHolder.get();
+    }
+    public static String getUserName() {
+        String userCacheKey = String.join(":", RedisConstant.USER_PREFIX, String.valueOf(userIdHolder.get()));
+        RBucket<UserInfoDTO> bucket = redissonClient.getBucket(userCacheKey);
+        UserInfoDTO userInfoDTO = bucket.get();
+        return userInfoDTO.getUsername();
+    }
+    public static String getUserToken() {
+        return userTokenHolder.get();
+    }
+
+    public static Boolean hasLogin(){
+        return userIdHolder.get() != null;
     }
 
     /**

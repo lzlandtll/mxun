@@ -1,7 +1,7 @@
 package com.mxun.art.service;
 
-import com.mxun.art.vo.OpenArticleVO;
-import com.mxun.art.vo.ParamVO;
+import com.mxun.art.vo.resp.OpenArticleVO;
+import com.mxun.art.vo.req.ParamVO;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
 import com.mxun.art.entity.Article;
@@ -20,4 +20,10 @@ public interface ArticleService extends IService<Article> {
 
     Page<OpenArticleVO> getArticleListByParam(ParamVO paramVO);
 
+    void incrLikeCount(Long articleId);
+    void decrLikeCount(Long articleId);
+    void incrCollectionCount(Long articleId);
+    void decrCollectionCount(Long articleId);
+    void incrViewCount(Long articleId);
+    void incrCommentCount(Long articleId);
 }

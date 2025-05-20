@@ -14,7 +14,7 @@ import java.util.List;
  * @since 2025-03-30
  */
 @RestController
-@RequestMapping("/tag")
+@RequestMapping("/api/tag")
 public class TagController {
 
     @Autowired

@@ -1,4 +1,4 @@
-package com.mxun.art.vo;
+package com.mxun.art.vo.resp;
 
 import com.mxun.art.entity.Article;
 import com.mxun.art.entity.Tag;
@@ -16,6 +16,9 @@ public class OpenArticleVO extends Article {
 
     private String authorName;
     private String categoryName;
+    private Boolean isFavorite = false;
+    private Boolean isLike = false;
+    private Boolean isFollow = false;
     private List<Tag> tagList;
 
 }

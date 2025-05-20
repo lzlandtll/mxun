@@ -3,7 +3,7 @@ package com.mxun.art.controller;
 
 import com.mxun.art.dto.ArticleHistoryDTO;
 import com.mxun.art.enums.ArticleSaveStausEnum;
-import com.mxun.art.vo.EditArticleHistoryVO;
+import com.mxun.art.vo.resp.EditArticleHistoryVO;
 import com.mxun.common.enums.ErrorEnum;
 import com.mxun.common.resultView.BusinessException;
 import com.mxun.common.utils.StringUtils;
@@ -25,7 +25,7 @@ import java.security.NoSuchAlgorithmException;
  */
 @Validated
 @RestController
-@RequestMapping("/articleHistory")
+@RequestMapping("/api/articleHistory")
 public class ArticleHistoryController {
 
     @Autowired

@@ -74,4 +74,62 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         System.out.println("同步用户数据成功");
     }
+
+    @Override
+    public void incrArticle(Long userId) {
+        boolean bool = mapper.incrArticle(userId);
+        if(!bool){
+            throw new BusinessException(ErrorEnum.USER_INCR_ARTICLE_COUNT_ERROR);
+        }
+    }
+
+    @Override
+    public void incrFollow(Long userId) {
+        boolean bool = mapper.incrFollow(userId);
+        if(!bool){
+            throw new BusinessException(ErrorEnum.USER_INCR_FOLLOW_COUNT_ERROR);
+        }
+    }
+
+    @Override
+    public void decrFollow(Long userId) {
+
+        boolean bool = mapper.decrFollow(userId);
+        if(!bool){
+            throw new BusinessException(ErrorEnum.USER_DECR_FOLLOW_COUNT_ERROR);
+        }
+    }
+
+    @Override
+    public void incrArticleLike(Long userId) {
+        boolean bool = mapper.incrArticleLike(userId);
+        if(!bool){
+            throw new BusinessException(ErrorEnum.USER_INCR_ARTICLE_LIKE_ERROR);
+        }
+    }
+
+    @Override
+    public void decrArticleLike(Long userId) {
+
+        boolean bool = mapper.decrArticleLike(userId);
+        if(!bool){
+            throw new BusinessException(ErrorEnum.USER_DECR_ARTICLE_LIKE_ERROR);
+        }
+    }
+
+    @Override
+    public void incrArticleCollection(Long userId) {
+        boolean bool = mapper.incrArticleCollection(userId);
+        if(!bool){
+            throw new BusinessException(ErrorEnum.USER_INCR_ARTICLE_COLLECTION_ERROR);
+        }
+    }
+
+    @Override
+    public void decrArticleCollection(Long userId) {
+        boolean bool = mapper.decrArticleCollection(userId);
+        if(!bool){
+            throw new BusinessException(ErrorEnum.USER_DECR_ARTICLE_COLLECTION_ERROR);
+        }
+    }
 }

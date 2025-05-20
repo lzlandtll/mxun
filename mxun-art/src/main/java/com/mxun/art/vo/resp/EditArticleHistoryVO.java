@@ -1,4 +1,4 @@
-package com.mxun.art.vo;
+package com.mxun.art.vo.resp;
 
 import com.mxun.art.entity.ArticleHistory;
 import lombok.Data;

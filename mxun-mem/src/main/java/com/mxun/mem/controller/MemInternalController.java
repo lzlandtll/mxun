@@ -33,4 +33,25 @@ public class MemInternalController {
     public void syncSysUser(@Valid @RequestBody SyncUserDTO syncUserDTO) {
         userService.syncSysUser(syncUserDTO);
     }
+
+    @GetMapping("incrArticle")
+    public void incrArticle(@RequestParam("userId") Long userId) {
+        userService.incrArticle(userId);
+    }
+    @GetMapping("incrArticleLike")
+    public void incrArticleLike(@RequestParam("userId") Long userId) {
+        userService.incrArticleLike(userId);
+    }
+    @GetMapping("decrArticleLike")
+    public void decrArticleLike(@RequestParam("userId") Long userId) {
+        userService.decrArticleLike(userId);
+    }
+    @GetMapping("incrArticleCollection")
+    public void incrArticleCollection(@RequestParam("userId") Long userId) {
+        userService.incrArticleCollection(userId);
+    }
+    @GetMapping("decrArticleCollection")
+    public void decrArticleCollection(@RequestParam("userId") Long userId) {
+        userService.decrArticleCollection(userId);
+    }
 }

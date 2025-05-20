@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date: 2025/3/9 17:46
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
 

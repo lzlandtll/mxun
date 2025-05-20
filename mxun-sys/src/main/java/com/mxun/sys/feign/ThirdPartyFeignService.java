@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "mxun-third-party")
 public interface ThirdPartyFeignService {
 
-    @PostMapping("/sms/sendCode")
+    @PostMapping("/internal/sms/sendCode")
     ResultView sendCode(@RequestBody SmsCodeDTO smsCodeDTO);
 
-    @PostMapping("/sms/verifyCode")
+    @PostMapping("/internal/sms/verifyCode")
     ResultView verifyCode(@RequestBody SmsCodeDTO smsCodeDTO);
 }

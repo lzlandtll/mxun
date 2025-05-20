@@ -6,11 +6,14 @@ import com.mxun.art.entity.Article;
 import com.mxun.art.entity.Tag;
 import com.mxun.art.enums.ArticleSaveStausEnum;
 import com.mxun.art.enums.ArticleStatusEnum;
+import com.mxun.art.feign.MemFeignService;
+import com.mxun.art.feign.SysFeignService;
 import com.mxun.art.service.ArticleService;
 import com.mxun.art.service.ArticleTagService;
-import com.mxun.art.vo.EditArticleHistoryVO;
+import com.mxun.art.vo.resp.EditArticleHistoryVO;
 import com.mxun.common.enums.ErrorEnum;
 import com.mxun.common.resultView.BusinessException;
+import com.mxun.common.resultView.ResultView;
 import com.mxun.common.utils.UserUtil;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
@@ -42,6 +45,10 @@ public class ArticleHistoryServiceImpl extends ServiceImpl<ArticleHistoryMapper,
 
     @Autowired
     private ArticleTagService articleTagService;
+    @Autowired
+    private MemFeignService memFeignService;
+    @Autowired
+    private SysFeignService sysFeignService;
 
     @Transactional
     @Override
@@ -115,7 +122,10 @@ public class ArticleHistoryServiceImpl extends ServiceImpl<ArticleHistoryMapper,
         updateStatus(articleHistoryDTO.getId(), ArticleStatusEnum.ARTICLE_PENDING_AUDIT.getStatus());
 
         // 3.修改文章状态为待审核状态
-        articleService.updateStatus(articleHistoryDTO.getArticleId(), ArticleStatusEnum.ARTICLE_PENDING_AUDIT.getStatus());
+        Article article = articleService.getById(articleHistoryDTO.getArticleId());
+        if(!Objects.equals(article.getStatus(), ArticleStatusEnum.ARTICLE_AUDIT_SUCCESS.getStatus())){
+            articleService.updateStatus(articleHistoryDTO.getArticleId(), ArticleStatusEnum.ARTICLE_PENDING_AUDIT.getStatus());
+        }
 
         // 4.模拟成功审核文章
         listenerPublishArticle(articleHistoryDTO.getId());
@@ -126,7 +136,6 @@ public class ArticleHistoryServiceImpl extends ServiceImpl<ArticleHistoryMapper,
      * @Author: liuzhilin
      * @Date: 2025/4/1 22:44
      */
-    @Transactional
     public void listenerPublishArticle(Long articleHistoryId){
         ArticleHistory articleHistory = this.getById(articleHistoryId);
         if(Objects.isNull(articleHistory)){
@@ -134,7 +143,9 @@ public class ArticleHistoryServiceImpl extends ServiceImpl<ArticleHistoryMapper,
         }
 
         // 2.修改文章状态为发布状态
-        Article article = new Article();
+        Article article = articleService.getById(articleHistory.getArticleId());
+        String articleStatus = article.getStatus();
+
         article.setId(articleHistory.getArticleId());
         article.setTitle(articleHistory.getTitle());
         article.setSummary(articleHistory.getSummary());
@@ -146,6 +157,15 @@ public class ArticleHistoryServiceImpl extends ServiceImpl<ArticleHistoryMapper,
 
         // 3.修改历史文章状态为发布状态
         updateStatus(articleHistoryId, ArticleStatusEnum.ARTICLE_AUDIT_SUCCESS.getStatus());
+
+
+        // 4.增加用户的发布文章总数
+        if(!Objects.equals(articleStatus, ArticleStatusEnum.ARTICLE_AUDIT_SUCCESS.getStatus())){
+            ResultView resultView = memFeignService.incrArticle(article.getAuthorId());
+            if(!resultView.getCode().equals(ErrorEnum.SUCCESS.getCode())){
+                throw new BusinessException(ErrorEnum.getError(resultView.getCode()));
+            }
+        }
     }
 
     @Override
@@ -157,6 +177,7 @@ public class ArticleHistoryServiceImpl extends ServiceImpl<ArticleHistoryMapper,
         if(!b){
             throw new BusinessException(ErrorEnum.ART_ARTICLE_STATUS_UPDATE_ERROR);
         }
+
         return articleHistory;
     }
 

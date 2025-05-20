@@ -16,4 +16,18 @@ public interface UserService extends IService<User> {
     UserVO getOpenUserInfo(Long userId);
 
     void syncSysUser(SyncUserDTO syncUserDTO);
+
+    void incrArticle(Long userId);
+
+    void incrFollow(Long userId);
+
+    void decrFollow(Long userId);
+
+    void incrArticleLike(Long userId);
+
+    void decrArticleLike(Long userId);
+
+    void incrArticleCollection(Long userId);
+
+    void decrArticleCollection(Long userId);
 }

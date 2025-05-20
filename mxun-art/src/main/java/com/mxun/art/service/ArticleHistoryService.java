@@ -1,8 +1,7 @@
 package com.mxun.art.service;
 
 import com.mxun.art.dto.ArticleHistoryDTO;
-import com.mxun.art.entity.Article;
-import com.mxun.art.vo.EditArticleHistoryVO;
+import com.mxun.art.vo.resp.EditArticleHistoryVO;
 import com.mybatisflex.core.service.IService;
 import com.mxun.art.entity.ArticleHistory;
 

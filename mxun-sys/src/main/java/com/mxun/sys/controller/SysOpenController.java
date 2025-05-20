@@ -5,9 +5,8 @@ import com.mxun.sys.feign.ThirdPartyFeignService;
 import com.mxun.sys.service.UserService;
 import com.mxun.common.annotation.IpLimitRequest;
 import com.mxun.sys.stream.KafkaProducerService;
-import com.mxun.sys.vo.UserVO;
+import com.mxun.sys.vo.PublicUserVO;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,7 @@ public class SysOpenController {
     }
 
     @GetMapping("getUserById")
-    public UserVO getUserById(@RequestParam("userId") @NotNull(message = "01013") Long userId) {
+    public PublicUserVO getUserById(@RequestParam("userId") @NotNull(message = "01013") Long userId) {
         return userService.getUserById(userId);
     }
 }

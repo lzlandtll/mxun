@@ -14,6 +14,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 添加用户信息拦截器
-        registry.addInterceptor(new UserInfoInterceptor()).addPathPatterns("/**").excludePathPatterns("/open/**");
+        registry.addInterceptor(new UserInfoInterceptor()).addPathPatterns("/**");
     }
 }

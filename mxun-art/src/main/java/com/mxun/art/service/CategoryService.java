@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface CategoryService extends IService<Category> {
 
-    List<Category> getCategoryList();
+    List<Category> getCategoryList( Long userId);
 
     Category createCategory(String name);
 }

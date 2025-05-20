@@ -13,6 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @FeignClient(name = "mxun-auth")
 public interface AuthFeignService {
-    @PostMapping("/user/thirdLogin")
+    @PostMapping("/api/user/thirdLogin")
     ResultView thirdLogin(@RequestBody ThirdUserInfo userDTO);
 }

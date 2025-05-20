@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date: 2025/3/9 18:00
  */
 @RestController
-@RequestMapping("/apiResource")
+@RequestMapping("/api/apiResource")
 public class ApiResourceController {
 
 //    @Autowired

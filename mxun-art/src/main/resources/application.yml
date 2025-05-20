@@ -12,3 +12,4 @@ spring:
     import:
       - classpath:mybatis-flex-config.yml
       - classpath:redis.yml
+      - classpath:elasticsearch.yml

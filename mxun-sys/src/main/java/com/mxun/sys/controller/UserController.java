@@ -1,13 +1,13 @@
 package com.mxun.sys.controller;
 
-import com.mxun.sys.entity.User;
 import com.mxun.sys.service.UserService;
-import com.mxun.sys.vo.UserVO;
-import jakarta.validation.constraints.NotBlank;
+import com.mxun.sys.vo.PersonalUserVO;
+import com.mxun.sys.vo.PublicUserVO;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 用户基本信息表 控制层。
@@ -15,8 +15,9 @@ import java.util.List;
  * @author moxuan
  * @since 2025-03-01
  */
+@Validated
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -31,5 +32,15 @@ public class UserController {
     @GetMapping("removeAiKey")
     public void removeAiKey() {
         userService.removeAiKey();
+    }
+
+    @GetMapping("getPersonalUserInfo")
+    public PersonalUserVO getUserById() {
+        return userService.getPersonalUserInfo();
+    }
+
+    @PostMapping("savePersonalUserInfo")
+    public void savePersonalUserInfo(@Valid @RequestBody PersonalUserVO personalUserVO) {
+        userService.savePersonalUserInfo(personalUserVO);
     }
 }

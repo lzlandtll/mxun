@@ -1,5 +1,6 @@
 package com.mxun.art.entity;
 
+import com.mxun.common.core.CommonEntity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
@@ -23,16 +24,10 @@ import lombok.experimental.Accessors;
 @Data(staticConstructor = "create")
 @EqualsAndHashCode(callSuper = true)
 @Table("art_article_tag")
-public class ArticleTag extends Model<ArticleTag> {
+public class ArticleTag extends CommonEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 标签ID
-     */
-    @Id(keyType = KeyType.Auto)
-    private Long id;
 
     /**
      * 文章ID,关联到mxun-art.art_article.id字段
@@ -43,35 +38,5 @@ public class ArticleTag extends Model<ArticleTag> {
      * 标签ID,关联到mxun-art.art_tag.id字段
      */
     private Long tagId;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 创建人ID,关联mxun-sys.sys_user.id
-     */
-    private String createBy;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
-     * 修改用户ID,关联mxun-sys.sys_user.id
-     */
-    private String updateBy;
-
-    /**
-     * 逻辑删除标志(0: 未删除, 1: 已删除, 默认为0)
-     */
-    private Boolean isDeleted;
-
-    /**
-     * 版本号
-     */
-    private Integer version;
 
 }

@@ -1,11 +1,27 @@
 package com.mxun.common.config;
 
+import com.mxun.common.utils.UserUtil;
+import feign.RequestInterceptor;
+import feign.RequestTemplate;
 import feign.Retryer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class FeignConfig {
+
+    @Bean
+    public RequestInterceptor requestInterceptor() {
+        return new RequestInterceptor() {
+            @Override
+            public void apply(RequestTemplate requestTemplate) {
+                String token = UserUtil.getUserToken();
+                if (token != null) {
+                    requestTemplate.header("Authorization", "Bearer " + token);
+                }
+            }
+        };
+    }
 
     @Bean
     public Retryer feignRetryer() {

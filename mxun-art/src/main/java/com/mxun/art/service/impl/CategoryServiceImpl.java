@@ -24,9 +24,9 @@ import java.util.Objects;
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
 
     @Override
-    public List<Category> getCategoryList() {
+    public List<Category> getCategoryList( Long userId) {
         QueryWrapper query = this.query();
-        query.eq(Category::getUserId, UserUtil.getUserId());
+        query.eq(Category::getUserId, userId);
         return this.list(query);
     }
 

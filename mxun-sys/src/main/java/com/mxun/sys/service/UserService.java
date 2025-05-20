@@ -3,7 +3,8 @@ package com.mxun.sys.service;
 
 import com.mxun.sys.dto.UserDTO;
 import com.mxun.sys.entity.User;
-import com.mxun.sys.vo.UserVO;
+import com.mxun.sys.vo.PersonalUserVO;
+import com.mxun.sys.vo.PublicUserVO;
 import com.mybatisflex.core.service.IService;
 
 /**
@@ -21,5 +22,9 @@ public interface UserService extends IService<User> {
 
     String removeAiKey();
 
-    UserVO getUserById(Long userId);
+    PublicUserVO getUserById(Long userId);
+
+    PersonalUserVO getPersonalUserInfo();
+
+    void savePersonalUserInfo(PersonalUserVO personalUserVO);
 }

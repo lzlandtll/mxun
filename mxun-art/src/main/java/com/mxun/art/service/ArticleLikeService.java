@@ -11,4 +11,9 @@ import com.mxun.art.entity.ArticleLike;
  */
 public interface ArticleLikeService extends IService<ArticleLike> {
 
+    ArticleLike onLike(Long articleId);
+
+    void cancelLike(Long articleId);
+
+    Boolean hasLiked(Long articleId);
 }
