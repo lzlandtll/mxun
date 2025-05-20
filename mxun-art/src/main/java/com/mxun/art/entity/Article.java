@@ -58,27 +58,27 @@ public class Article extends CommonEntity implements Serializable {
     /**
      * 用户分类ID,关联mxun-art.art_category.id
      */
-    private Integer categoryId;
+    private Long categoryId;
 
     /**
      * 点赞数
      */
-    private Integer likeCount;
+    private Long likeCount;
 
     /**
      * 收藏数
      */
-    private Integer collectionCount;
+    private Long collectionCount;
 
     /**
      * 浏览次数
      */
-    private Integer viewCount;
+    private Long viewCount;
 
     /**
      * 评论次数
      */
-    private Integer commentCount;
+    private Long commentCount;
 
     /**
      * 状态(01:保存、02:待审核、03:审核通过、04:审核未通过)
